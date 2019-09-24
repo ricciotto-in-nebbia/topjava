@@ -19,6 +19,7 @@ public class UserMealsUtil {
                 new UserMeal(LocalDateTime.of(2015, Month.MAY, 31,13,0), "Обед", 500),
                 new UserMeal(LocalDateTime.of(2015, Month.MAY, 31,20,0), "Ужин", 510)
         );
+        getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(12,0), 2000);
 
         //тестовые данные перемешаны
 //        List<UserMeal> mealList = Arrays.asList(
@@ -29,7 +30,6 @@ public class UserMealsUtil {
 //                new UserMeal(LocalDateTime.of(2015, Month.MAY, 30,20,0), "Ужин", 500),
 //                new UserMeal(LocalDateTime.of(2015, Month.MAY, 31,13,0), "Обед", 500)
 //        );
-        getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(12,0), 2000);
 //        getFilteredWithExceeded(mealList, LocalTime.of(0, 0), LocalTime.of(22,0), 2000);
 //        .toLocalDate();
 //        .toLocalTime();
@@ -41,15 +41,17 @@ public class UserMealsUtil {
         List<UserMealWithExceed> todayUserMealWithExceed = new ArrayList<>();
         Map<LocalDate, Integer> dateAndCalories = new HashMap<>();
 
-        for (int i = 0; i < list.size() - 1; i++) {
-            for (int j = i + 1; j < list.size(); j++) {
-                if (list.get(i).getDateTime().toLocalDate().isAfter(list.get(j).getDateTime().toLocalDate())) {
-                    UserMeal tmp = list.get(i);
-                    list.set(i, list.get(j));
-                    list.set(j, tmp);
-                }
-            }
-        }
+//        Comparator<UserMeal> compareByDate = new Comparator<UserMeal>() {
+//            @Override
+//            public int compare(UserMeal o1, UserMeal o2) {
+//                return o1.getDateTime().toLocalDate().compareTo(o2.getDateTime().toLocalDate());
+//            }
+//        };
+
+//        Comparator<UserMeal> compareByDate = (o1, o2) -> o1.getDateTime().toLocalDate().compareTo(o2.getDateTime().toLocalDate());
+
+        Comparator<UserMeal> compareByDate = Comparator.comparing(o -> o.getDateTime().toLocalDate());
+        list.sort(compareByDate);
 
         for (UserMeal userMeal : list) {
             LocalDateTime dateTime = userMeal.getDateTime();
