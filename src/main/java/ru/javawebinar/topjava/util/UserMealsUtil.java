@@ -65,7 +65,7 @@ public class UserMealsUtil {
                 String description = userMeal.getDescription();
                 int calories = userMeal.getCalories();
                 boolean exceed = dateAndCalories.get(dateTime.toLocalDate()) > caloriesPerDay;
-                System.out.println("dateTime: " + dateTime + " description: " + description + " calories: " + calories + " exceed: " + exceed);
+//                System.out.println("dateTime: " + dateTime + " description: " + description + " calories: " + calories + " exceed: " + exceed);
                 todayUserMealWithExceed.add(new UserMealWithExceed(dateTime, description, calories, exceed));
             }
         }
