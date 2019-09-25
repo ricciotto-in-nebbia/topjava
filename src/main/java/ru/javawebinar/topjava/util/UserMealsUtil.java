@@ -60,7 +60,6 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExceed> getFilteredWithExceeded_2(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        // TODO return filtered list with correctly exceeded field
         ArrayList<UserMeal> list = new ArrayList<>(mealList);
         List<UserMealWithExceed> todayUserMealWithExceed = new ArrayList<>();
         Map<LocalDate, Integer> dateAndCalories = new HashMap<>();
