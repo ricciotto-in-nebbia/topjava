@@ -72,9 +72,9 @@ public class UserMealsUtil {
                 .map((UserMeal userMeal) -> UserMealConverter.converter(userMeal, dateAndCalories, caloriesPerDay))
                 .collect(Collectors.toList());
 
-        for (UserMealWithExceed user : todayUserMealWithExceed) {
-            System.out.println(user);
-        }
+//        for (UserMealWithExceed user : todayUserMealWithExceed) {
+//            System.out.println(user);
+//        }
 
         return todayUserMealWithExceed;
     }
