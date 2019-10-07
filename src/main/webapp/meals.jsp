@@ -81,7 +81,6 @@
                 </tr>
             </c:forEach>
 
-
             </tr>
         </table>
     </div>

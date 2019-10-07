@@ -1,8 +1,13 @@
 package ru.javawebinar.topjava.model;
 
+import org.slf4j.Logger;
+
 import java.time.LocalDateTime;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class MealTo {
+    private static final Logger log = getLogger(MealTo.class);
     private final LocalDateTime dateTime;
     private final String description;
     private final int calories;
@@ -11,6 +16,8 @@ public class MealTo {
 
 
     public MealTo(LocalDateTime dateTime, String description, int calories, boolean excess, int id) {
+        log.debug("MealTo: create a new object");
+
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
