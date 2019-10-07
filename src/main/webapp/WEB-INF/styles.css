@@ -1,0 +1,90 @@
+body {
+    background-color: #ced4da;
+}
+
+h3 {
+    font-family: Times, serif;
+    font-size: 25px;
+}
+
+th {
+    height: 50px;
+}
+
+td {
+    font-family: Helvetica, serif;
+    font-size: 15px;
+    /*color: #366799;*/
+    /*color: #dd2c07;*/
+    height: 35px;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.td-btn-updateDelete {
+    padding-left: 0;
+    text-align: center;
+}
+
+.tdInput {
+    width: 100%;
+
+}
+.tableHeadButtons {
+    font-family: "Calibri Light", serif;
+    font-size: 12px;
+    font-weight: bold;
+    width: 50px;
+    color: lightslategray;
+    background-color: #a3b7c8;
+    margin: 0 auto;
+}
+
+.btn-updateDelete {
+    font-family: "Calibri Light", serif;
+    font-size: 12px;
+    font-weight: bold;
+    height: 0;
+    color: lightslategray;
+    border: none;
+    outline: none;
+    background: #ced4da none;
+    cursor: pointer;
+    text-decoration: underline;
+    text-align: center;
+    /*padding-left: 0px;*/
+}
+
+.inputForm {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+
+.col-2 {
+    max-width: 16.666667%;
+}
+
+.tableHead {
+    font-family: "Calibri Light", serif;
+    font-weight: bold;
+    /*margin: 0 auto;*/
+    width: 200px;
+    /*height: 27px;*/
+    color: #2e2e2e;
+    background-color: #a3b7c8;
+    border-color: #dc3545;
+    text-align: left;
+    padding-left: 20px;
+}

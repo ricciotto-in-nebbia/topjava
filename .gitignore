@@ -3,7 +3,10 @@ out
 target
 *.iml
 log
+/log
 src/main/java/ru/javawebinar/topjava/util/TimeComplexityTesting.java
 src/main/java/ru/javawebinar/topjava/util/UserMealConverter.java
 /patch_HW1
 /patch_HW0
+/doc
+/src/main/webapp/WEB-INF/111.xml
