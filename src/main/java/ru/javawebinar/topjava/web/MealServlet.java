@@ -1,8 +1,11 @@
 package ru.javawebinar.topjava.web;
 
+import org.slf4j.Logger;
+import ru.javawebinar.topjava.dao.MealDao;
+import ru.javawebinar.topjava.dao.MealDaoImpl;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealTo;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,112 +14,85 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
-import static java.util.Objects.nonNull;
-import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
-import static ru.javawebinar.topjava.util.MealsUtil.getFilteredList;
-import static ru.javawebinar.topjava.util.TimeUtil.parseTime;
+import static ru.javawebinar.topjava.util.MealsUtil.*;
 
 @WebServlet(value = "/meals", loadOnStartup = 0)
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
 
+    private static final long serialVersionUID = 1L;
+    private static final String INSERT_OR_EDIT = "/mealsEdit.jsp";
+    private static final String LIST_USER = "/meals.jsp";
+    private MealDao mealDao;
+
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        log.debug("doGet: redirect to MealServlet");
-
-        @SuppressWarnings("unchecked")
-        List<Meal> mealList = (List<Meal>) req.getServletContext().getAttribute("mealList");
-
-        String startDate = req.getParameter("startDate");
-        String endDate = req.getParameter("endDate");
-        String startTime = req.getParameter("startTime");
-        String endTime = req.getParameter("endTime");
-
-        List<MealTo> mealToList;
-        if (nonNull(startTime) && nonNull(endTime) && !startTime.isEmpty() && !endTime.isEmpty()) {
-            mealToList = getFilteredList(mealList, parseTime(startTime), parseTime(endTime), DEFAULT_CALORIES_PER_DAY);
-        } else {
-            mealToList = getFilteredList(mealList, LocalTime.MIN, LocalTime.MAX, DEFAULT_CALORIES_PER_DAY);
-        }
-
-        req.setAttribute("mealToList", mealToList);
-        req.getRequestDispatcher("/meals.jsp").forward(req, resp);
+    public void init() throws ServletException {
+        log.debug("MealServlet / init: redirect to MealServlet");
+        mealDao = new MealDaoImpl();
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        log.debug("doPost: redirect to MealServlet");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        log.debug("MealServlet / doGet: redirect to MealServlet");
 
-        @SuppressWarnings("unchecked")
-        List<Meal> mealList = (List<Meal>) req.getServletContext().getAttribute("mealList");
+        String forward = "";
+        String action = parseAction(request);
+        int mealId;
 
-        String actionName = req.getParameter("actionMeal");
-        String datetime = req.getParameter("datetime");
-        String description = req.getParameter("description");
-        String calories = req.getParameter("calories");
-
-        if (actionName.contains("Create")) {
-            mealList.add(new Meal(LocalDateTime.parse(datetime), description, Integer.parseInt(calories)));
+        switch (action) {
+            case "delete":
+                mealId = Integer.parseInt(request.getParameter("mealId"));
+                mealDao.deleteMeal(mealId);
+                requestAttributes(request);
+                response.sendRedirect("meals");
+                return;
+            case "edit":
+                forward = INSERT_OR_EDIT;
+                mealId = Integer.parseInt(request.getParameter("mealId"));
+                Meal meal = mealDao.getMealById(mealId);
+                request.setAttribute("meal", meal);
+                request.setAttribute("mealId", mealId);
+                break;
+            case "listMeal":
+                forward = LIST_USER;
+                requestAttributes(request);
+                break;
+            case "actionIsEmpty":
+                requestAttributes(request);
+                forward = LIST_USER;
         }
 
-        if (actionName.contains("updateJSP")) {
-            List<Meal> meals = new ArrayList<>();
-            String id = actionName.substring(actionName.indexOf("?") + 1);
-            int mealId = -1;
-            if (!id.isEmpty()) {
-                mealId = Integer.parseInt(id);
-            }
+        RequestDispatcher view = request.getRequestDispatcher(forward);
+        view.forward(request, response);
+    }
 
-            int finalMealId = mealId;
-            mealList.forEach(e -> {
-                if (e.getId() == finalMealId) {
-                    meals.add(e);
-                }
-            });
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        log.debug("MealServlet / doPost: redirect to MealServlet");
 
-            req.setAttribute("meals", meals);
-            req.getRequestDispatcher("/update.jsp").forward(req, resp);
+        String action = parseAction(request);
+        int mealId;
+        String datetime = request.getParameter("datetime");
+        String description = request.getParameter("description");
+        String calories = request.getParameter("calories");
+
+        switch (action) {
+            case "update":
+                log.debug("MealServlet / doPost: action update");
+
+                mealId = Integer.parseInt(request.getParameter("mealId"));
+                mealDao.deleteMeal(mealId);
+                mealDao.addMeal(new Meal(LocalDateTime.parse(datetime), description, Integer.parseInt(calories)));
+                break;
+            case "create":
+                log.debug("MealServlet / doPost: action create");
+                mealDao.addMeal(new Meal(LocalDateTime.parse(datetime), description, Integer.parseInt(calories)));
         }
+        response.sendRedirect("meals");
+    }
 
-        if (actionName.contains("updateMeal")) {
-            String id = actionName.substring(actionName.indexOf("?") + 1);
-            int mealId = -1;
-
-            if (!id.isEmpty()) {
-                mealId = Integer.parseInt(id);
-            }
-
-            int finalMealId = mealId;
-            mealList.forEach(e -> {
-                if (e.getId() == finalMealId) {
-                    mealList.remove(e);
-                }
-            });
-
-            mealList.add(new Meal(LocalDateTime.parse(datetime), description, Integer.parseInt(calories)));
-        }
-
-        if (actionName.contains("deleteMeal")) {
-            String id = actionName.substring(actionName.indexOf("?") + 1);
-            int mealId = -1;
-
-            if (!id.isEmpty()) {
-                mealId = Integer.parseInt(id);
-            }
-
-            int finalMealId = mealId;
-            mealList.forEach(e -> {
-                if (e.getId() == finalMealId) {
-                    mealList.remove(e);
-                }
-            });
-        }
-        doGet(req, resp);
+    private void requestAttributes(HttpServletRequest request){
+        request.setAttribute("mealTosMap", getMealTosMap(mealDao.getAllMeals(),
+                LocalTime.MIN, LocalTime.MAX, DEFAULT_CALORIES_PER_DAY));
     }
 }
