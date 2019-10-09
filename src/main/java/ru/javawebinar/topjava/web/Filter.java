@@ -11,8 +11,8 @@ import java.io.IOException;
 public class Filter implements javax.servlet.Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        servletRequest.setCharacterEncoding("UTF8");
-        servletResponse.setCharacterEncoding("UTF8");
+        servletRequest.setCharacterEncoding("UTF-8");
+        servletResponse.setCharacterEncoding("UTF-8");
 
         filterChain.doFilter(servletRequest, servletResponse);
     }

@@ -60,7 +60,6 @@ public class MealServlet extends HttpServlet {
                 forward = LIST_USER;
         }
 
-        requestAttributes(request);
         RequestDispatcher view = request.getRequestDispatcher(forward);
         view.forward(request, response);
     }
@@ -91,7 +90,6 @@ public class MealServlet extends HttpServlet {
     private static String parseAction(final HttpServletRequest request) {
         final String action = request.getParameter("action");
         log.debug("MealsUtil.parseAction: " + action);
-
         if (nonNull(action) && !action.isEmpty()) {
             return action.toLowerCase();
         } else {

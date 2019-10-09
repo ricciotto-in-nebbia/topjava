@@ -17,7 +17,6 @@ public class MealTo {
 
     public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
         log.debug("MealTo: create a new object");
-
         this.id = id;
         this.dateTime = dateTime;
         this.description = description;

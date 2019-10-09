@@ -8,7 +8,8 @@
   Time: 11:37
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%request.setCharacterEncoding("UTF-8");%>
 <html>
 <head>
     <title>Meals</title>
@@ -38,14 +39,13 @@
                 <jsp:useBean id="mealTo" type="ru.javawebinar.topjava.model.MealTo"/>
 
                 <tr style="${mealTo.excess ? 'color: #dd2c07':'color: #366799'}">
-                    <td><c:out value="${TimeUtil.outputFormat(mealTo.dateTime)} ${mealTo.id}"/></td>
+                    <td><c:out value="${TimeUtil.outputFormat(mealTo.dateTime)}"/></td>
                     <td><c:out value="${mealTo.description}"/></td>
                     <td><c:out value="${mealTo.calories}"/></td>
 
                     <td><a href="meals?action=edit&mealId=<c:out value="${mealTo.id}"/>">Update</a></td>
                     <td><a href="meals?action=delete&mealId=<c:out value="${mealTo.id}"/>">Delete</a></td>
                 </tr>
-
             </c:forEach>
 
             </tr>
