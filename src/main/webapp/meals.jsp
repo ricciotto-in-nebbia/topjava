@@ -22,27 +22,6 @@
     <hr>
     <div>
         <h2>Таблица приема пищи</h2>
-        <div>
-            <form id="filter" action="meals">
-                <div class="offset-1 col-2">
-                    <label for="startDate">От даты</label>
-                    <input class="inputForm" type="date" name="startDate" id="startDate">
-                </div>
-                <div class="col-2">
-                    <label for="endDate">До даты</label>
-                    <input class="inputForm" type="date" name="endDate" id="endDate">
-                </div>
-                <div class="offset-2 col-2">
-                    <label for="startTime">От времени</label>
-                    <input class="inputForm" type="time" name="startTime" id="startTime">
-                </div>
-                <div class="col-2">
-                    <label for="endTime">До времени</label>
-                    <input class="inputForm" type="time" name="endTime" id="endTime">
-                </div>
-                <p><input type="reset" value="Reset" name="Reset"> <input type="submit" value="Ok" name="Ok"><br></p>
-            </form>
-        </div>
     </div>
     <div>
         <table class=\"table\">
@@ -54,17 +33,17 @@
                 <th class="tableHeadButtons">delete</th>
             </tr>
 
-            <jsp:useBean id="mealTosMap" scope="request" type="java.util.Map"/>
-            <c:forEach items="${mealTosMap.entrySet()}" var="mealTo">
-                <jsp:useBean id="mealTo" type="java.util.Map.Entry"/>
+            <jsp:useBean id="mealTosList" scope="request" type="java.util.ArrayList"/>
+            <c:forEach items="${mealTosList}" var="mealTo">
+                <jsp:useBean id="mealTo" type="ru.javawebinar.topjava.model.MealTo"/>
 
-                <tr style="${mealTo.value.excess ? 'color: #dd2c07':'color: #366799'}">
-                    <td><c:out value="${TimeUtil.outputFormat(mealTo.value.dateTime)}"/></td>
-                    <td><c:out value="${mealTo.value.description}"/></td>
-                    <td><c:out value="${mealTo.value.calories}"/></td>
+                <tr style="${mealTo.excess ? 'color: #dd2c07':'color: #366799'}">
+                    <td><c:out value="${TimeUtil.outputFormat(mealTo.dateTime)} ${mealTo.id}"/></td>
+                    <td><c:out value="${mealTo.description}"/></td>
+                    <td><c:out value="${mealTo.calories}"/></td>
 
-                    <td><a href="meals?action=edit&mealId=<c:out value="${mealTo.key}"/>">Update</a></td>
-                    <td><a href="meals?action=delete&mealId=<c:out value="${mealTo.key}"/>">Delete</a></td>
+                    <td><a href="meals?action=edit&mealId=<c:out value="${mealTo.id}"/>">Update</a></td>
+                    <td><a href="meals?action=delete&mealId=<c:out value="${mealTo.id}"/>">Delete</a></td>
                 </tr>
 
             </c:forEach>

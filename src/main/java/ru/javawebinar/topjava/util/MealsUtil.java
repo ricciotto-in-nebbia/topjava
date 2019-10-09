@@ -4,43 +4,30 @@ import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.nonNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealsUtil {
     private static final Logger log = getLogger(MealsUtil.class);
     public static final int DEFAULT_CALORIES_PER_DAY = 2000;
 
-    public static Map<Integer, MealTo> getMealTosMap(Map<Integer, Meal> mealMap, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+    public static List<MealTo> getAllList(List<Meal> mealList) {
         log.debug("MealsUtil: getMealTosMap");
 
-        Map<LocalDate, Integer> dateAndCalories = mealMap.values().stream()
+        Map<LocalDate, Integer> dateAndCalories = mealList.stream()
                 .collect(Collectors.groupingBy(meal -> meal.getDateTime().toLocalDate(),
                         Collectors.summingInt(Meal::getCalories)));
 
-        return mealMap.entrySet().stream()
-                .filter(e -> TimeUtil.isBetween(e.getValue().getDateTime().toLocalTime(), startTime, endTime))
-                .collect(Collectors.toMap((Map.Entry::getKey), v -> createTo(v.getValue(), dateAndCalories.get(v.getValue().getDateTime().toLocalDate()) > caloriesPerDay)));
+        return mealList.stream()
+                .map(meal -> createTo(meal, dateAndCalories.get(meal.getDateTime().toLocalDate()) > DEFAULT_CALORIES_PER_DAY))
+                .collect(Collectors.toList());
     }
 
     private static MealTo createTo(Meal meal, boolean excess) {
-        return new MealTo(meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
-    }
-
-    public static String parseAction(final HttpServletRequest request) {
-        final String action = request.getParameter("action");
-        log.debug("MealsUtil.parseAction: " + action);
-
-        if (nonNull(action) && !action.isEmpty()) {
-            return action.toLowerCase();
-        } else {
-            return "actionIsEmpty";
-        }
+        return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
 }

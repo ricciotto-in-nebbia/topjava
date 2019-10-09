@@ -6,20 +6,30 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import static java.util.Objects.nonNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Meal {
     private static final Logger log = getLogger(Meal.class);
-    private final LocalDateTime dateTime;
-    private final String description;
-    private final int calories;
+    private Integer id;
+    private LocalDateTime dateTime;
+    private String description;
+    private int calories;
 
-    public Meal(LocalDateTime dateTime, String description, int calories) {
+    public Meal(Integer id, LocalDateTime dateTime, String description, int calories) {
         log.debug("Meal: create a new object");
-
+        this.id = id;
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public LocalDateTime getDateTime() {
@@ -32,13 +42,5 @@ public class Meal {
 
     public int getCalories() {
         return calories;
-    }
-
-    public LocalDate getDate() {
-        return dateTime.toLocalDate();
-    }
-
-    public LocalTime getTime() {
-        return dateTime.toLocalTime();
     }
 }

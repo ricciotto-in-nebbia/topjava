@@ -8,18 +8,25 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealTo {
     private static final Logger log = getLogger(MealTo.class);
+    private final Integer id;
+
     private final LocalDateTime dateTime;
     private final String description;
     private final int calories;
     private final boolean excess;
 
-    public MealTo(LocalDateTime dateTime, String description, int calories, boolean excess) {
+    public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
         log.debug("MealTo: create a new object");
 
+        this.id = id;
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
         this.excess = excess;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public LocalDateTime getDateTime() {
