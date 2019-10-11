@@ -2,11 +2,8 @@ package ru.javawebinar.topjava.model;
 
 import org.slf4j.Logger;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
-import static java.util.Objects.nonNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Meal {

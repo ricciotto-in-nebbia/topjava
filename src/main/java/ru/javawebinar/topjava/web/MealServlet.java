@@ -23,9 +23,8 @@ import static ru.javawebinar.topjava.util.MealsUtil.getAllList;
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
 
-    private static final long serialVersionUID = 1L;
     private static final String EDIT_MEAL = "/mealsEdit.jsp";
-    private static final String LIST_USER = "/meals.jsp";
+    private static final String LIST_MEAL = "/meals.jsp";
     private MealDao mealDao;
 
     @Override
@@ -37,15 +36,15 @@ public class MealServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("MealServlet / doGet");
 
-        String forward;
+        String page;
         String action = parseAction(request);
         Integer mealId = getId(request);
 
         switch (action) {
             case "delete":
                 log.debug("MealServlet / doPost: action delete");
-                mealDao.delete(mealId);
-                requestAttributes(request);
+                mealDao.deleteById(mealId);
+                setAttribute(request);
                 response.sendRedirect("meals");
                 return;
             case "edit":
@@ -53,15 +52,19 @@ public class MealServlet extends HttpServlet {
                 Meal meal = mealDao.getById(mealId);
                 request.setAttribute("meal", meal);
                 request.setAttribute("mealId", mealId);
-                forward = EDIT_MEAL;
+                page = EDIT_MEAL;
                 break;
             default:
-                requestAttributes(request);
-                forward = LIST_USER;
+                setAttribute(request);
+                page = LIST_MEAL;
         }
 
-        RequestDispatcher view = request.getRequestDispatcher(forward);
-        view.forward(request, response);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(page);
+        dispatcher.forward(request, response);
+    }
+
+    private void setAttribute(HttpServletRequest request) {
+        request.setAttribute("mealTosList", getAllList(mealDao.getAll()));
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -73,7 +76,7 @@ public class MealServlet extends HttpServlet {
         switch (action) {
             case "update":
                 log.debug("MealServlet / doPost: action update");
-                mealDao.delete(mealId);
+                mealDao.deleteById(mealId);
                 addNewMeal(mealId, request);
                 break;
             case "create":
@@ -83,11 +86,7 @@ public class MealServlet extends HttpServlet {
         response.sendRedirect("meals");
     }
 
-    private void requestAttributes(HttpServletRequest request) {
-        request.setAttribute("mealTosList", getAllList(mealDao.getAll()));
-    }
-
-    private static String parseAction(final HttpServletRequest request) {
+    private String parseAction(final HttpServletRequest request) {
         final String action = request.getParameter("action");
         log.debug("MealsUtil.parseAction: " + action);
         if (nonNull(action) && !action.isEmpty()) {
@@ -107,6 +106,6 @@ public class MealServlet extends HttpServlet {
         String description = request.getParameter("description");
         String calories = request.getParameter("calories");
 
-        mealDao.add(new Meal(mealId, LocalDateTime.parse(datetime), description, Integer.parseInt(calories)));
+        mealDao.save(new Meal(mealId, LocalDateTime.parse(datetime), description, Integer.parseInt(calories)));
     }
 }

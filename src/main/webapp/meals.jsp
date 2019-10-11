@@ -33,25 +33,20 @@
                 <th class="tableHeadButtons">update</th>
                 <th class="tableHeadButtons">delete</th>
             </tr>
-
             <jsp:useBean id="mealTosList" scope="request" type="java.util.ArrayList"/>
             <c:forEach items="${mealTosList}" var="mealTo">
                 <jsp:useBean id="mealTo" type="ru.javawebinar.topjava.model.MealTo"/>
-
                 <tr style="${mealTo.excess ? 'color: #dd2c07':'color: #366799'}">
                     <td><c:out value="${TimeUtil.outputFormat(mealTo.dateTime)}"/></td>
                     <td><c:out value="${mealTo.description}"/></td>
                     <td><c:out value="${mealTo.calories}"/></td>
-
                     <td><a href="meals?action=edit&mealId=<c:out value="${mealTo.id}"/>">Update</a></td>
                     <td><a href="meals?action=delete&mealId=<c:out value="${mealTo.id}"/>">Delete</a></td>
                 </tr>
             </c:forEach>
-
             </tr>
         </table>
     </div>
-
     <div class="offset-1 col-2">
         <form id="createMeal" action="meals" method="post">
             <input type="datetime-local" name="datetime" required>
