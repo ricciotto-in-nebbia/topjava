@@ -10,7 +10,6 @@
         .normal {
             color: green;
         }
-
         .excess {
             color: red;
         }
@@ -21,6 +20,14 @@
     <h3><a href="index.html">Home</a></h3>
     <hr/>
     <h2>Meals</h2>
+    <form action = "meals" method="POST">
+        Date From: <input type = "date" name = "date_from" value="${dateFrom}">
+        Date To: <input type = "date" name = "date_to" value="${dateTo}">
+        <br />
+        Time From: <input type = "time" name = "time_from" value = "${timeFrom}">
+        Time To: <input type = "time" name = "time_to" value = "${timeTo}">
+        <input type = "submit" name = "submit" value = "Submit">
+    </form>
     <a href="meals?action=create">Add Meal</a>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
